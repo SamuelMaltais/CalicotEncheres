@@ -78,42 +78,42 @@ resource "azurerm_app_service" "app" {
 }
 
 # Autoscaling of web app
-# resource "azurerm_monitor_autoscale_setting" "auto_scale" {
-#   name                = "autoscale-app-calicot-dev-${var.code_identification}"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = var.location
-#   target_resource_id  = azurerm_service_plan.plan.id
-#
-#   profile {
-#     name = "default"
-#
-#     capacity {
-#       default = 1
-#       minimum = 1
-#       maximum = 2
-#     }
-#
-#     rule {
-#       metric_trigger {
-#         metric_name        = "Percentage CPU"
-#         metric_resource_id = azurerm_service_plan.plan.id
-#         time_grain         = "PT1M"
-#         statistic          = "Average"
-#         operator           = "GreaterThan"
-#         threshold          = 70
-#         time_aggregation   = "Average"
-#         time_window        = "PT5M"
-#       }
-#
-#       scale_action {
-#         direction = "Increase"
-#         type      = "ChangeCount"
-#         value     = 1
-#         cooldown  = "PT5M"
-#       }
-#     }
-#   }
-# }
+resource "azurerm_monitor_autoscale_setting" "auto_scale" {
+  name                = "autoscale-app-calicot-dev-${var.code_identification}"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  target_resource_id  = azurerm_service_plan.plan.id
+
+  profile {
+    name = "default"
+
+    capacity {
+      default = 1
+      minimum = 1
+      maximum = 2
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_service_plan.plan.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        operator           = "GreaterThan"
+        threshold          = 70
+        time_aggregation   = "Average"
+        time_window        = "PT5M"
+      }
+
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = 1
+        cooldown  = "PT5M"
+      }
+    }
+  }
+}
 
 
 # SQL Server
