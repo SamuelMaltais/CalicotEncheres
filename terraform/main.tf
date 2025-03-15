@@ -3,6 +3,26 @@ resource "azurerm_resource_group" "rg" {
   location = "Canada Central"
 }
 
+
+# Key vault
+# Création du Key Vault
+resource "azurerm_key_vault" "kv" {
+  name                        = "kv-calicot-dev-${var.code_identification}"
+  location                    = azurerm_resource_group.rg.location
+  resource_group_name         = azurerm_resource_group.rg.name
+  sku_name                    = "standard"
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  enable_rbac_authorization   = true  # Active l'autorisation basée sur les rôles
+}
+
+# resource "azurerm_key_vault_secret" "connection_string" {
+#   name         = "ConnectionStrings"
+#   value        = azurerm_mssql_server.sqlsrv.administrator_login_password
+#   key_vault_id = azurerm_key_vault.kv.id
+# }
+
+
+
 # Network vpn
 
 resource "azurerm_virtual_network" "vnet" {
@@ -59,40 +79,67 @@ resource "azurerm_app_service" "app" {
 }
 
 # Autoscaling of web app
-resource "azurerm_monitor_autoscale_setting" "auto_scale" {
-  name                = "autoscale-app-calicot-dev-${var.code_identification}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
-  target_resource_id  = azurerm_service_plan.plan.id
+# resource "azurerm_monitor_autoscale_setting" "auto_scale" {
+#   name                = "autoscale-app-calicot-dev-${var.code_identification}"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = var.location
+#   target_resource_id  = azurerm_service_plan.plan.id
+#
+#   profile {
+#     name = "default"
+#
+#     capacity {
+#       default = 1
+#       minimum = 1
+#       maximum = 2
+#     }
+#
+#     rule {
+#       metric_trigger {
+#         metric_name        = "Percentage CPU"
+#         metric_resource_id = azurerm_service_plan.plan.id
+#         time_grain         = "PT1M"
+#         statistic          = "Average"
+#         operator           = "GreaterThan"
+#         threshold          = 70
+#         time_aggregation   = "Average"
+#         time_window        = "PT5M"
+#       }
+#
+#       scale_action {
+#         direction = "Increase"
+#         type      = "ChangeCount"
+#         value     = 1
+#         cooldown  = "PT5M"
+#       }
+#     }
+#   }
+# }
 
-  profile {
-    name = "default"
 
-    capacity {
-      default = 1
-      minimum = 1
-      maximum = 2
-    }
+# SQL Server
+# Création du serveur SQL
+# resource "azurerm_mssql_server" "sqlsrv" {
+#   name                         = "sqlsrv-calicot-dev-${var.code_identification}"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   location                     = azurerm_resource_group.rg.location
+#   version                      = "12.0"
+#   administrator_login = ""
+#
+#   minimum_tls_version = "1.2"
+# }
 
-    rule {
-      metric_trigger {
-        metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_service_plan.plan.id
-        time_grain         = "PT1M"
-        statistic          = "Average"
-        operator           = "GreaterThan"
-        threshold          = 70
-        time_aggregation   = "Average"
-        time_window        = "PT5M"
-      }
-
-      scale_action {
-        direction = "Increase"
-        type      = "ChangeCount"
-        value     = 1
-        cooldown  = "PT5M"
-      }
-    }
-  }
-}
+# Création de la base de données SQL
+# resource "azurerm_mssql_database" "sqldb" {
+#   name                = "sqldb-calicot-dev-${var.code_identification}"
+#   server_id          = azurerm_mssql_server.sqlsrv.id
+#   sku_name           = "Basic"
+#
+#   # Empêcher la suppression accidentelle
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+# }
+# Récupération des infos de l'Azure AD pour le tenant_id
+data "azurerm_client_config" "current" {}
 
