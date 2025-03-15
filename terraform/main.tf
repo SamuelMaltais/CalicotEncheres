@@ -15,16 +15,6 @@ resource "azurerm_key_vault" "kv" {
   enable_rbac_authorization = true # Active l'autorisation basée sur les rôles
 }
 
-resource "azurerm_key_vault_access_policy" "kv_policy" {
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-
-  secret_permissions = ["Get", "List"]
-  key_permissions    = ["Get", "List"]
-  certificate_permissions = ["Get", "List"]
-}
-
 
 # Network vpn
 
@@ -57,6 +47,11 @@ resource "azurerm_service_plan" "plan" {
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Windows"
   sku_name            = "S1"
+}
+
+resource "azurerm_app_service_virtual_network_swift_connection" "this" {
+  app_service_id = azurerm_service_plan.plan.id
+  subnet_id      = azurerm_subnet.snet_web.id
 }
 
 resource "azurerm_app_service" "app" {
@@ -119,10 +114,6 @@ resource "azurerm_app_service" "app" {
 #   }
 # }
 
-data "azurerm_key_vault_secret" "sql-admin-password" {
-  name                = "sql-admin-password"
-  key_vault_id        = azurerm_key_vault.kv.id
-}
 
 # SQL Server
 # Création du serveur SQL
@@ -132,7 +123,7 @@ resource "azurerm_mssql_server" "sqlsrv" {
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
   administrator_login          = "my_admin_login"
-  administrator_login_password = data.azurerm_key_vault_secret.sql-admin-password.value
+  administrator_login_password = "ZY@m7bA%5lEkj&"
 
   minimum_tls_version = "1.2"
 }
