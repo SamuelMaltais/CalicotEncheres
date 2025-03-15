@@ -6,7 +6,12 @@ terraform {
     }
   }
 
-  backend "azurerm" {} # Stockage distant (configurer selon besoin)
+  backend "azurerm" {
+    resource_group_name  = "rg-calicot-commun-001"
+    storage_account_name = "terraformstate<prefix>"
+    container_name       = "terraform-state"
+    key                  = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
