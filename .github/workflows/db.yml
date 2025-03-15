@@ -31,6 +31,7 @@ jobs:
             --container-name ${{ secrets.AZURE_CONTAINER_NAME }} \
             --file ./db/Auctions_Data.bacpac \
             --name Auctions_Data.bacpac \
+            --overwrite
 
       - name: "Import BACPAC into Azure SQL Database"
         run: |
@@ -40,4 +41,3 @@ jobs:
             --name "sqldb-calicot-dev-13" \
             --storage-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }} \
             --storage-uri "https://${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/${{ secrets.AZURE_CONTAINER_NAME }}/Auctions_Data.bacpac" \
-            --overwrite
