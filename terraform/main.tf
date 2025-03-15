@@ -41,17 +41,29 @@ resource "azurerm_subnet" "snet_db" {
 
 # Web app
 
-resource "azurerm_service_plan" "plan" {
-  name                = "plan-calicot-dev-${var.code_identification}"
+# resource "azurerm_service_plan" "plan" {
+#   name                      = "plan-calicot-dev-${var.code_identification}"
+#   location                  = azurerm_resource_group.rg.location
+#   resource_group_name       = azurerm_resource_group.rg.name
+#   os_type                   = "Windows"
+#   sku_name                  = "S1"
+#   virtual_network_subnet_id = azurerm_subnet.subnet_web.id
+# }
+
+resource "azurerm_app_service_plan" "plan" {
+  name                = "plan-calicot-dev-cc-${var.code_identification}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  os_type             = "Windows"
-  sku_name            = "S1"
-}
+  kind                = "Linux"
+  reserved            = true
 
-resource "azurerm_app_service_virtual_network_swift_connection" "this" {
-  app_service_id = azurerm_service_plan.plan.id
-  subnet_id      = azurerm_subnet.snet_web.id
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
+
+  # Il est associé au sous-réseau de l'application web via une intégration réseau
+  virtual_network_subnet_id = azurerm_subnet.subnet_web.id
 }
 
 resource "azurerm_app_service" "app" {
