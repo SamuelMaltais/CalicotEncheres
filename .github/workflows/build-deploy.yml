@@ -1,4 +1,4 @@
-name: "Deplay web application to azure"
+name: "Deploy web application to Azure"
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
               "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
               "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
             }
-
           auth-type: SERVICE_PRINCIPAL
 
       - name: "Deploy to Azure App Service"
