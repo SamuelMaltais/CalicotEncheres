@@ -117,7 +117,7 @@ resource "azurerm_mssql_server" "sqlsrv" {
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
-  administrator_login          = "admin"
+  administrator_login          = "my_admin_login"
   administrator_login_password = "password"
 
   minimum_tls_version = "1.2"
