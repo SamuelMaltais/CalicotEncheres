@@ -7,12 +7,12 @@ resource "azurerm_resource_group" "rg" {
 # Key vault
 # Création du Key Vault
 resource "azurerm_key_vault" "kv" {
-  name                        = "kv-calicot-dev-${var.code_identification}"
-  location                    = azurerm_resource_group.rg.location
-  resource_group_name         = azurerm_resource_group.rg.name
-  sku_name                    = "standard"
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  enable_rbac_authorization   = true  # Active l'autorisation basée sur les rôles
+  name                      = "kv-calicot-dev-${var.code_identification}"
+  location                  = azurerm_resource_group.rg.location
+  resource_group_name       = azurerm_resource_group.rg.name
+  sku_name                  = "standard"
+  tenant_id                 = data.azurerm_client_config.current.tenant_id
+  enable_rbac_authorization = true # Active l'autorisation basée sur les rôles
 }
 
 # resource "azurerm_key_vault_secret" "connection_string" {
@@ -62,11 +62,11 @@ resource "azurerm_app_service" "app" {
   app_service_plan_id = azurerm_service_plan.plan.id
 
   site_config {
-    always_on          = true
-    min_tls_version    = "1.2"
+    always_on       = true
+    min_tls_version = "1.2"
   }
 
-  https_only         = true
+  https_only = true
 
   app_settings = {
     "ImageUrl" = "https://stcalicotprod000.blob.core.windows.net/images/"
@@ -95,15 +95,26 @@ resource "azurerm_monitor_autoscale_setting" "auto_scale" {
 
     rule {
       metric_trigger {
-        metric_name        = "Percentage CPU"
+        metric_name        = "CpuUsage" # Correct metric name (e.g., "CpuUsage" or others)
         metric_resource_id = azurerm_service_plan.plan.id
-        time_grain         = "PT1M"
-        statistic          = "Average"
+        metric_namespace   = "Microsoft.Web/serverFarms"
         operator           = "GreaterThan"
         threshold          = 70
+        time_grain         = "PT1M"
+        statistic          = "Average"
         time_aggregation   = "Average"
         time_window        = "PT5M"
       }
+      # metric_trigger {
+      #   metric_name        = "Percentage CPU"
+      #   metric_resource_id = azurerm_service_plan.plan.id
+      #   time_grain         = "PT1M"
+      #   statistic          = "Average"
+      #   operator           = "GreaterThan"
+      #   threshold          = 70
+      #   time_aggregation   = "Average"
+      #   time_window        = "PT5M"
+      # }
 
       scale_action {
         direction = "Increase"
