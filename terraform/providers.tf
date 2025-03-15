@@ -8,8 +8,8 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "rg-calicot-commun-001"
-    storage_account_name = "terraformstate<prefix>"
-    container_name       = "terraform-state"
+    storage_account_name = "stcalicotprod000"
+    container_name       = "images"
     key                  = "terraform.tfstate"
   }
 }

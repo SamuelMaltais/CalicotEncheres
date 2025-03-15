@@ -1,3 +1,8 @@
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-calicot-dev-${var.code_identification}"
+  location = "Canada Central"
+}
+
 # Network vpn
 
 resource "azurerm_virtual_network" "vnet" {
@@ -23,29 +28,26 @@ resource "azurerm_subnet" "snet_db" {
 
 # Web app
 
-resource "azurerm_app_service_plan" "plan" {
+resource "azurerm_service_plan" "plan" {
   name                = "plan-calicot-dev-${var.code_identification}"
-  location            = var.location
+  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  kind                = "App"
-  
-  sku {
-    tier = "Standard"
-    size = var.app_tier
-  }
+  os_type             = "Windows"
+  sku_name            = "S1"
 }
 
 resource "azurerm_app_service" "app" {
   name                = "app-calicot-dev-${var.code_identification}"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.plan.id
+  app_service_plan_id = azurerm_service_plan.plan.id
 
   site_config {
     always_on          = true
-    https_only         = true
     min_tls_version    = "1.2"
   }
+
+  https_only         = true
 
   app_settings = {
     "ImageUrl" = "https://stcalicotprod000.blob.core.windows.net/images/"
@@ -61,7 +63,7 @@ resource "azurerm_monitor_autoscale_setting" "auto_scale" {
   name                = "autoscale-app-calicot-dev-${var.code_identification}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
-  target_resource_id  = azurerm_app_service_plan.plan.id
+  target_resource_id  = azurerm_service_plan.plan.id
 
   profile {
     name = "default"
@@ -75,12 +77,13 @@ resource "azurerm_monitor_autoscale_setting" "auto_scale" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_app_service_plan.plan.id
+        metric_resource_id = azurerm_service_plan.plan.id
         time_grain         = "PT1M"
         statistic          = "Average"
         operator           = "GreaterThan"
         threshold          = 70
         time_aggregation   = "Average"
+        time_window        = "PT5M"
       }
 
       scale_action {
