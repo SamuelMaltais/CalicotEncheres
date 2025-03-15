@@ -40,4 +40,7 @@ jobs:
             --server "sqlsrv-calicot-dev-13.database.windows.net" \
             --name "sqldb-calicot-dev-13" \
             --storage-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }} \
+            --storage-key-type "StorageAccessKey" \
             --storage-uri "https://${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/${{ secrets.AZURE_CONTAINER_NAME }}/Auctions_Data.bacpac" \
+            ----admin-user "my_admin_login" \
+            --admin-password "ZY@m7bA%5lEkj&" \
