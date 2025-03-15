@@ -22,7 +22,6 @@ resource "azurerm_key_vault" "kv" {
 # }
 
 
-
 # Network vpn
 
 resource "azurerm_virtual_network" "vnet" {
