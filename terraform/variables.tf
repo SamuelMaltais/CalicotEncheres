@@ -14,4 +14,3 @@ variable "app_tier" {
   type        = string
   default     = "S1"
 }
-
