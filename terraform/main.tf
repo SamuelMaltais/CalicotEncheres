@@ -20,9 +20,9 @@ resource "azurerm_key_vault_access_policy" "kv_policy" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  secret_permissions = ["get", "list"]
-  key_permissions    = ["get", "list"]
-  certificate_permissions = ["get", "list"]
+  secret_permissions = ["Get", "List"]
+  key_permissions    = ["Get", "List"]
+  certificate_permissions = ["Get", "List"]
 }
 
 
