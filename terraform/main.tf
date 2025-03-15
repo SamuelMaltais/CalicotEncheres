@@ -109,7 +109,6 @@ resource "azurerm_app_service" "app" {
 #   }
 # }
 
-
 # SQL Server
 # Création du serveur SQL
 resource "azurerm_mssql_server" "sqlsrv" {
@@ -118,7 +117,7 @@ resource "azurerm_mssql_server" "sqlsrv" {
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
   administrator_login          = "my_admin_login"
-  administrator_login_password = "ZY@m7bA%5lEkj&"
+  administrator_login_password =  data.azurerm_key_vault_secret.sql-admin-password.value
 
   minimum_tls_version = "1.2"
 }
@@ -134,6 +133,12 @@ resource "azurerm_mssql_database" "sqldb" {
     prevent_destroy = true
   }
 }
+
+data "azurerm_key_vault_secret" "sql-admin-password" {
+  name                = "sql-admin-password"
+  key_vault_id        = azurerm_key_vault.kv.id
+}
+
 
 # resource "azurerm_key_vault_secret" "password_db" {
 #   name         = "password_db"
