@@ -1,4 +1,4 @@
-;; Network vpn
+# Network vpn
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-dev-calicot-cc-${var.code_identification}"
@@ -21,7 +21,7 @@ resource "azurerm_subnet" "snet_db" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-;; Web app
+# Web app
 
 resource "azurerm_app_service_plan" "plan" {
   name                = "plan-calicot-dev-${var.code_identification}"
@@ -56,7 +56,7 @@ resource "azurerm_app_service" "app" {
   }
 }
 
-;; Autoscaling of web app
+# Autoscaling of web app
 resource "azurerm_monitor_autoscale_setting" "auto_scale" {
   name                = "autoscale-app-calicot-dev-${var.code_identification}"
   resource_group_name = azurerm_resource_group.rg.name
