@@ -118,7 +118,7 @@ resource "azurerm_mssql_server" "sqlsrv" {
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
   administrator_login          = "admin"
-  administrator_login_password = azurerm_key_vault_secret.password_db
+  administrator_login_password = "password"
 
   minimum_tls_version = "1.2"
 }
@@ -135,11 +135,11 @@ resource "azurerm_mssql_database" "sqldb" {
   }
 }
 
-resource "azurerm_key_vault_secret" "password_db" {
-  name         = "password_db"
-  value        = azurerm_mssql_server.sqlsrv.administrator_login_password
-  key_vault_id = azurerm_key_vault.kv.id
-}
+# resource "azurerm_key_vault_secret" "password_db" {
+#   name         = "password_db"
+#   value        = azurerm_mssql_server.sqlsrv.administrator_login_password
+#   key_vault_id = azurerm_key_vault.kv.id
+# }
 
 # Récupération des infos de l'Azure AD pour le tenant_id
 data "azurerm_client_config" "current" {}
