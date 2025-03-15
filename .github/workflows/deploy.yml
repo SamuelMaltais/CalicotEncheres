@@ -32,7 +32,7 @@ jobs:
               "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
             }
 
-        auth-type: SERVICE_PRINCIPAL
+          auth-type: SERVICE_PRINCIPAL
 
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
