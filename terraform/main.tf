@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-calicot-dev-${var.code_identification}"
+  name     = "rg-calicot-web-dev-${var.code_identification}"
   location = "Canada Central"
 }
 
@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "rg" {
 # Key vault
 # Création du Key Vault
 resource "azurerm_key_vault" "kv" {
-  name                        = "kv-calicot-dev-${var.code_identification}"
+  name                        = "kv-calicot-web-dev-${var.code_identification}"
   location                    = azurerm_resource_group.rg.location
   resource_group_name         = azurerm_resource_group.rg.name
   sku_name                    = "standard"
@@ -49,7 +49,7 @@ resource "azurerm_subnet" "snet_db" {
 # Web app
 
 resource "azurerm_service_plan" "plan" {
-  name                = "plan-calicot-dev-${var.code_identification}"
+  name                = "plan-calicot-web-dev-${var.code_identification}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Windows"
@@ -57,7 +57,7 @@ resource "azurerm_service_plan" "plan" {
 }
 
 resource "azurerm_app_service" "app" {
-  name                = "app-calicot-dev-${var.code_identification}"
+  name                = "app-calicot-web-dev-${var.code_identification}"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_service_plan.plan.id
@@ -80,7 +80,7 @@ resource "azurerm_app_service" "app" {
 
 # Autoscaling of web app
 # resource "azurerm_monitor_autoscale_setting" "auto_scale" {
-#   name                = "autoscale-app-calicot-dev-${var.code_identification}"
+#   name                = "autoscale-app-calicot-web-dev-${var.code_identification}"
 #   resource_group_name = azurerm_resource_group.rg.name
 #   location            = var.location
 #   target_resource_id  = azurerm_service_plan.plan.id
@@ -120,7 +120,7 @@ resource "azurerm_app_service" "app" {
 # SQL Server
 # Création du serveur SQL
 # resource "azurerm_mssql_server" "sqlsrv" {
-#   name                         = "sqlsrv-calicot-dev-${var.code_identification}"
+#   name                         = "sqlsrv-calicot-web-dev-${var.code_identification}"
 #   resource_group_name          = azurerm_resource_group.rg.name
 #   location                     = azurerm_resource_group.rg.location
 #   version                      = "12.0"
@@ -131,7 +131,7 @@ resource "azurerm_app_service" "app" {
 
 # Création de la base de données SQL
 # resource "azurerm_mssql_database" "sqldb" {
-#   name                = "sqldb-calicot-dev-${var.code_identification}"
+#   name                = "sqldb-calicot-web-dev-${var.code_identification}"
 #   server_id          = azurerm_mssql_server.sqlsrv.id
 #   sku_name           = "Basic"
 #
