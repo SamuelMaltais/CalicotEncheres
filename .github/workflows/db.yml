@@ -24,6 +24,13 @@ jobs:
             }
           auth-type: SERVICE_PRINCIPAL
 
+      - name: "Break Lease on BACPAC Blob (if needed)"
+        run: |
+          az storage blob lease break \
+            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} \
+            --container-name ${{ secrets.AZURE_CONTAINER_NAME }} \
+            --blob-name Auctions_Data.bacpac
+
       - name: "Upload BACPAC to Azure Blob Storage"
         run: |
           az storage blob upload \
